@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import { env } from '../../env';
 
 const transporterConfig = nodemailer.createTransport({
-    host: 'smtp.forwardemail.net',
+    host: 'mail.classipredio.com.br',
     port: 465,
     secure: true,
     auth: {
@@ -11,12 +11,18 @@ const transporterConfig = nodemailer.createTransport({
     },
 });
 
-export async function sendMailToClient(receiverEmail: string) {
+export async function sendMailToCustomer(receiverEmail: string) {
+    transporterConfig.verify(function (error) {
+        if (error) {
+            return error;
+        }
+    });
+
     const email = await transporterConfig.sendMail({
         from: env.MAILER_EMAIL,
         to: receiverEmail,
         subject: 'Compra confirmada! Pegue seu produto aqui.',
-        text: 'Sua compra na loja foi confirmada! O produto segue em anexo.',
+        text: 'Sua compra na loja foi confirmada! O produto está em anexo.',
     });
 
     console.log(`📨 Message sent: ${email.messageId}`);
