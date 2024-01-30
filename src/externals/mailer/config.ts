@@ -11,7 +11,7 @@ const transporterConfig = nodemailer.createTransport({
     },
 });
 
-export async function sendMailToCustomer(receiverEmail: string) {
+export async function sendMailToCustomer(receiverEmail: string): Promise<Error | void> {
     transporterConfig.verify(function (error) {
         if (error) {
             return error;

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import userRoutes from './user';
+import notificationRoutes from './notifications';
 
 export const routes = Router();
 
-routes.use('/user', userRoutes);
+routes.use('/notifications', notificationRoutes);
