@@ -4,8 +4,13 @@ import { z } from 'zod';
 const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     PORT: z.coerce.number().default(8080),
+
     MAILER_EMAIL: z.string().email(),
     MAILER_PASS: z.string(),
+
+    MERCADO_LIVRE_CLIENT_ID: z.string(),
+    MERCADO_LIVRE_CLIENT_SECRET: z.string(),
+    MERCADO_LIVRE_REDIRECT_URI: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
