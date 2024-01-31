@@ -10,7 +10,10 @@ const envSchema = z.object({
 
     MERCADO_LIVRE_CLIENT_ID: z.string(),
     MERCADO_LIVRE_CLIENT_SECRET: z.string(),
-    MERCADO_LIVRE_REDIRECT_URI: z.string(),
+
+    CLOUDFLARE_ENDPOINT: z.string(),
+    CLOUDFLARE_ACCESS_KEY: z.string(),
+    CLOUDFLARE_SECRET_KET: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
