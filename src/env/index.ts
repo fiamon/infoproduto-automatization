@@ -5,15 +5,11 @@ const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     PORT: z.coerce.number().default(8080),
 
-    MAILER_EMAIL: z.string().email(),
-    MAILER_PASS: z.string(),
+    MERCADO_LIVRE_APP_ID: z.string(),
+    MERCADO_LIVRE_SECRET_KEY: z.string(),
+    MERCADO_LIVRE_CUSTOMER_CODE: z.string(),
 
-    MERCADO_LIVRE_CLIENT_ID: z.string(),
-    MERCADO_LIVRE_CLIENT_SECRET: z.string(),
-
-    CLOUDFLARE_ENDPOINT: z.string(),
-    CLOUDFLARE_ACCESS_KEY: z.string(),
-    CLOUDFLARE_SECRET_KET: z.string(),
+    DATABASE_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
