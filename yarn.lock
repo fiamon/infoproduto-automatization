@@ -346,6 +346,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "@prisma/client@npm:5.9.1"
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 5447007e42d507e45960210d804736000b53556b076dd15797dfaed0c58e462dc24eb27e9c6636b8a145dd1a103fc7f6cd876f1906217e8fd8b74c6533169287
+  languageName: node
+  linkType: hard
+
 "@prisma/debug@npm:5.9.1":
   version: 5.9.1
   resolution: "@prisma/debug@npm:5.9.1"
@@ -3051,6 +3063,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "setup-typescript-and-node@workspace:."
   dependencies:
+    "@prisma/client": "npm:^5.9.1"
     "@types/cors": "npm:^2.8.17"
     "@types/express": "npm:^4.17.21"
     "@types/node": "npm:^20.10.2"
