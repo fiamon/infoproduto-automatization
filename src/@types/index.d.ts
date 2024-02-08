@@ -18,7 +18,7 @@ export interface MercadoLivreNotification {
     received: string;
 }
 
-interface Order {
+export interface Order {
     id: number;
     date_created: string;
     date_closed: string;

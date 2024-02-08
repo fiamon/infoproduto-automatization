@@ -5,21 +5,20 @@ import { NotificationsService } from '../services/notifications';
 const notificationsService = new NotificationsService();
 
 export default class NotificationsController {
-    async receiveTheRequestFromMercadoLivre(req: Request, res: Response): Promise<void> {
+    async receiveTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response> {
         if (req.body.topic !== 'orders_v2') {
-            res.send('ok').status(200);
+            return res.sendStatus(200);
         }
 
-        const response = await axios.post('http://localhost:8080/notifications/handle', {
+        const response = await axios.post('http://localhost:8080/notification/handle', {
             body: req.body,
         });
 
         if (response.status !== 200) {
-            res.status(500);
-            return;
+            return res.status(500);
         }
 
-        res.status(200).send('ok');
+        return res.sendStatus(200);
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<void> {

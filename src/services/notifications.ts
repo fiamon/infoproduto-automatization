@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { MercadoLivreNotification, Order } from '../@types';
 import axios from 'axios';
+import { updateMercadoLivreRefreshToken } from './refresh-token';
 
 const prisma = new PrismaClient();
 
@@ -15,16 +16,24 @@ export class NotificationsService {
 
         const order: Order = await axios.get(`https://api.mercadolibre.com/${body.resource}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token[0].access_token}`,
             },
         });
+
+        if (!order) {
+            await updateMercadoLivreRefreshToken();
+        }
 
         if (!order.pack_id) {
             order.pack_id = order.id;
         }
 
+        this.messageSenderHandler(order, token[0].access_token);
+    }
+
+    async messageSenderHandler(order: Order, token: string) {
         async function sendMessage() {
-            await axios.post(
+            const message = await axios.post(
                 `https://api.mercadolibre.com/messages/packs/${order.pack_id}/sellers/${order.buyer.id}?tag=post_sale`,
                 {
                     from: {
@@ -41,7 +50,15 @@ export class NotificationsService {
                     },
                 },
             );
+
+            return message;
         }
-        sendMessage();
+
+        const message = await sendMessage();
+
+        if (message.status === 400) {
+            await updateMercadoLivreRefreshToken();
+            await sendMessage();
+        }
     }
 }
