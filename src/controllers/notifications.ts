@@ -10,7 +10,7 @@ export default class NotificationsController {
             return res.sendStatus(200);
         }
 
-        const response = await axios.post('http://localhost:8080/notification/handle', {
+        const response = await axios.post('http://localhost:8080/notifications/handle', {
             body: req.body,
         });
 

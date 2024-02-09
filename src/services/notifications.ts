@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Tokens } from '@prisma/client';
 import { MercadoLivreNotification, Order } from '../@types';
 import axios from 'axios';
 import { updateMercadoLivreRefreshToken } from './refresh-token';
@@ -6,7 +6,7 @@ import { updateMercadoLivreRefreshToken } from './refresh-token';
 const prisma = new PrismaClient();
 
 export class NotificationsService {
-    async handleRequest(body: MercadoLivreNotification) {
+    private async getToken(): Promise<Tokens[]> {
         const token = await prisma.tokens.findMany({
             orderBy: {
                 created_at: 'desc',
@@ -14,7 +14,26 @@ export class NotificationsService {
             take: 1,
         });
 
-        const order: Order = await axios.get(`https://api.mercadolibre.com/${body.resource}`, {
+        return token;
+    }
+
+    private async getOrder(token: Tokens[], request: MercadoLivreNotification): Promise<Order> {
+        const order: Order = await axios.get(`https://api.mercadolibre.com/${request.body.resource}`, {
+            headers: {
+                Authorization: `Bearer ${token[0].access_token}`,
+            },
+        });
+
+        return order;
+    }
+
+    async handleRequest(body: MercadoLivreNotification) {
+        let token: Tokens[];
+        token = await this.getToken();
+
+        let order: Order;
+
+        order = await axios.get(`https://api.mercadolibre.com/${body.body.resource}`, {
             headers: {
                 Authorization: `Bearer ${token[0].access_token}`,
             },
@@ -22,27 +41,29 @@ export class NotificationsService {
 
         if (!order) {
             await updateMercadoLivreRefreshToken();
+            token = await this.getToken();
+            order = await this.getOrder(token, body);
         }
 
-        if (!order.pack_id) {
-            order.pack_id = order.id;
+        if (!order.data.pack_id) {
+            order.data.pack_id = order.data.id;
         }
 
         this.messageSenderHandler(order, token[0].access_token);
     }
 
-    async messageSenderHandler(order: Order, token: string) {
+    private async messageSenderHandler(order: Order, token: string) {
         async function sendMessage() {
             const message = await axios.post(
-                `https://api.mercadolibre.com/messages/packs/${order.pack_id}/sellers/${order.buyer.id}?tag=post_sale`,
+                `https://api.mercadolibre.com/messages/packs/${order.data.pack_id}/sellers/${order.data.buyer.id}?tag=post_sale`,
                 {
                     from: {
-                        user_id: order.seller.id,
+                        user_id: order.data.seller.id,
                     },
                     to: {
-                        user_id: order.buyer.id,
+                        user_id: order.data.buyer.id,
                     },
-                    text: `Olá, ${order.buyer.first_name}. Agradecemos pela compra! Entraremos em contato para realizar o envio do produto.`,
+                    text: `Olá, ${order.data.buyer.first_name}. Agradecemos pela compra! Entraremos em contato para realizar o envio do produto.`,
                 },
                 {
                     headers: {
