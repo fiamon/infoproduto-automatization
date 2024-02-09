@@ -10,10 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model tokens {
+model Token {
   id            String   @id @default(cuid()) @map("_id")
   access_token  String
   refresh_token String
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
+
+  @@map("tokens")
 }

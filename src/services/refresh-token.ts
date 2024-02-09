@@ -25,7 +25,6 @@ export async function getAuthorizationCode(userCode: string): Promise<GetAuthori
         },
     });
 
-    console.log(authorizationCode);
     return authorizationCode.data;
 }
 
