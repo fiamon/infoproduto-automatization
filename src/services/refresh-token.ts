@@ -6,7 +6,7 @@ import { RefreshToken } from '../@types';
 const prisma = new PrismaClient();
 
 export async function updateMercadoLivreRefreshToken() {
-    const getTheLastRegister = await prisma.tokens.findMany({
+    const getTheLastTokenRegistered = await prisma.tokens.findMany({
         orderBy: {
             created_at: 'desc',
         },
@@ -17,7 +17,7 @@ export async function updateMercadoLivreRefreshToken() {
         grant_type: 'refresh_token',
         client_id: env.MERCADO_LIVRE_APP_ID,
         client_secret: env.MERCADO_LIVRE_SECRET_KEY,
-        refresh_token: getTheLastRegister[0].refresh_token,
+        refresh_token: getTheLastTokenRegistered[0].refresh_token,
     });
 
     await prisma.tokens.create({
@@ -29,5 +29,3 @@ export async function updateMercadoLivreRefreshToken() {
 
     return token;
 }
-
-updateMercadoLivreRefreshToken();
