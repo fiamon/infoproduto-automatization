@@ -22,7 +22,7 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<void> {
-        res.status(200).send('ok');
         await notificationsService.handleRequest(req.body);
+        res.sendStatus(200);
     }
 }

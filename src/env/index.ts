@@ -7,7 +7,6 @@ const envSchema = z.object({
 
     MERCADO_LIVRE_APP_ID: z.string(),
     MERCADO_LIVRE_SECRET_KEY: z.string(),
-    MERCADO_LIVRE_CUSTOMER_CODE: z.string(),
 
     DATABASE_URL: z.string(),
 });
