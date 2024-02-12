@@ -4,6 +4,7 @@ import { z } from 'zod';
 const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'production']).default('development'),
     PORT: z.coerce.number().default(8080),
+    SECRET: z.coerce.string(),
 
     MERCADO_LIVRE_APP_ID: z.string(),
     MERCADO_LIVRE_SECRET_KEY: z.string(),
