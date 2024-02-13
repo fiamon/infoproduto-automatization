@@ -17,34 +17,42 @@ export class NotificationsService {
         return token[0];
     }
 
-    private async getOrder(token: Tokens, { body }: MercadoLivreNotification): Promise<Order> {
-        const order: AxiosResponse<Order> = await axios.get(`https://api.mercadolibre.com/${body.resource}`, {
-            headers: {
-                Authorization: `Bearer ${token.access_token}`,
-            },
-        });
+    private async getOrder(token: Tokens, { body }: MercadoLivreNotification): Promise<Order | undefined> {
+        try {
+            const order: AxiosResponse<Order> = await axios.get(
+                `https://api.mercadolibre.com/${body.resource}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.access_token}`,
+                    },
+                },
+            );
 
-        return order.data;
-    }
+            if (!order.data.pack_id) {
+                order.data.pack_id = order.data.id;
+            }
 
-    async handleRequest(body: MercadoLivreNotification) {
-        let token = await this.getToken();
-
-        let order = await this.getOrder(token, body);
-
-        if (!order) {
-            try {
-                console.log(order);
-                await updateMercadoLivreRefreshToken();
-                token = await this.getToken();
-                order = await this.getOrder(token, body);
-            } catch (error) {
-                console.error(error);
+            return order.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.message === 'access_token is required') {
+                    await updateMercadoLivreRefreshToken();
+                } else {
+                    console.error('Axios Error: ', error);
+                }
+            } else {
+                console.log('Error: ', error);
             }
         }
+    }
 
-        if (!order.pack_id) {
-            order.pack_id = order.id;
+    async handleRequest(body: MercadoLivreNotification): Promise<void> {
+        const token = await this.getToken();
+
+        const order = await this.getOrder(token, body);
+
+        if (!order) {
+            return;
         }
 
         await this.messageSenderHandler(order, token);
