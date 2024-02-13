@@ -22,58 +22,70 @@ export interface MercadoLivreNotification {
 
 export interface Order {
     id: number;
-    date_created: string;
-    date_closed: string;
-    last_updated: string;
-    manufacturing_ending_date: null | string;
-    comment: null | string;
+    date_created: Date;
+    date_closed: Date;
+    last_updated: Date;
+    manufacturing_ending_date: null;
+    comment: null;
     pack_id: number;
-    pickup_id: null | number;
-    order_request: {
-        return: null | object;
-        change: null | object;
-    };
-    fulfilled: null | boolean;
-    mediations: unknown[];
+    pickup_id: null;
+    order_request: OrderRequest;
+    fulfilled: null;
+    mediations: any[];
     total_amount: number;
     paid_amount: number;
-    coupon: {
-        id: null | number;
-        amount: number;
-    };
-    expiration_date: string;
+    coupon: Coupon;
+    expiration_date: Date;
     order_items: OrderItem[];
+}
+
+export interface Coupon {
+    id: null;
+    amount: number;
+}
+
+export interface OrderItem {
+    item: Item;
+    quantity: number;
+    requested_quantity: RequestedQuantity;
+    picked_quantity: null;
+    unit_price: number;
+    full_unit_price: number;
     currency_id: string;
-    payments: Payment[];
-    shipping: {
-        id: number;
-    };
-    status: string;
-    status_detail: null | string;
-    tags: string[];
-    feedback: {
-        buyer: null | object;
-        seller: null | object;
-    };
-    context: {
-        channel: string;
-        site: string;
-        flows: unknown[];
-    };
-    buyer: {
-        id: number;
-        nickname: string;
-        first_name: string;
-        last_name: string;
-    };
-    seller: {
-        id: number;
-    };
-    taxes: {
-        amount: null | number;
-        currency_id: null | string;
-        id: null | number;
-    };
+    manufacturing_days: null;
+    sale_fee: number;
+    listing_type_id: string;
+}
+
+export interface Item {
+    id: string;
+    title: string;
+    category_id: string;
+    variation_id: number;
+    seller_custom_field: null;
+    variation_attributes: VariationAttribute[];
+    warranty: string;
+    condition: string;
+    seller_sku: null;
+    global_price: null;
+    net_weight: null;
+}
+
+export interface VariationAttribute {
+    id: string;
+    name: string;
+    value_id: string;
+    value_name: string;
+}
+
+export interface RequestedQuantity {
+    value: number;
+    measure: string;
+}
+
+export interface OrderRequest {
+    return: null;
+    change: null;
 }
 
 export interface RefreshToken {
