@@ -1,10 +1,14 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import * as AWS from 'aws-sdk';
 import { env } from '../../env';
 
-export const s3 = new S3Client({
-    credentials: {
-        accessKeyId: env.AWS_ACCESS_KEY,
+export function createS3Instance() {
+    const s3 = new AWS.S3();
+    s3.config.update({
+        region: env.AWS_BUCKET_REGION,
         secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-    },
-    region: env.AWS_BUCKET_REGION,
-});
+        accessKeyId: env.AWS_ACCESS_KEY,
+        signatureVersion: 'v4',
+    });
+
+    return s3;
+}
