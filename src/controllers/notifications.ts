@@ -8,7 +8,6 @@ const notificationsService = new NotificationsService();
 
 export default class NotificationsController {
     async receiveTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response> {
-        console.log(req.body);
         const bodySchema = z.object({
             _id: z.string(),
             resource: z.string().startsWith('/orders/'),
@@ -24,6 +23,10 @@ export default class NotificationsController {
         const isBodySchema = bodySchema.safeParse(req.body);
         if (!isBodySchema.success) {
             return res.sendStatus(400);
+        }
+
+        if (req.body.attempts > 1) {
+            return res.sendStatus(200);
         }
 
         await axios.post(
