@@ -5,8 +5,8 @@
     "main": "src/server.ts",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/server.js",
-        "start:dev": "tsx watch src/server.ts",
+        "start": "node --no-warnings dist/src/server.js",
+        "start:dev": "tsx watch --no-warnings src/server.ts",
         "coverage": "typescript-coverage-report"
     },
     "keywords": [
@@ -31,7 +31,6 @@
     },
     "dependencies": {
         "@prisma/client": "^5.9.1",
-        "aws-sdk": "^2.1556.0",
         "axios": "^1.6.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.0",

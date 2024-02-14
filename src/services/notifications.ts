@@ -59,6 +59,8 @@ export class NotificationsService {
     }
 
     private async messageSenderHandler(order: Order, token: Tokens) {
+        const formattedTitle = order.order_items[0].item.title.replace(' ', '%20');
+
         async function sendMessage() {
             const message = await fetch(
                 `https://api.mercadolibre.com/messages/action_guide/packs/${order.pack_id}/option?tag=post_sale`,
@@ -66,7 +68,7 @@ export class NotificationsService {
                     method: 'post',
                     body: JSON.stringify({
                         option_id: 'OTHER',
-                        text: 'Obrigado por realizar a compra na nossa loja. Entraremos em contato para enviar o produto',
+                        text: `Obrigado por sua compra, me chame no WhatsApp através do link abaixo:<br><br>https://wa.me/5511998033929?text=Acabei%20de%20comprar%20o%20produto:%20${formattedTitle}<br><br>QUE EU JÁ TE ENVIO O LINK PARA DOWNLOAD<br><br>att / Hallak`,
                     }),
                     headers: {
                         Authorization: `Bearer ${token.access_token}`,
