@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { env } from '../env';
-import { PrismaClient } from '@prisma/client';
 import { RefreshToken } from '../@types';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 

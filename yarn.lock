@@ -346,7 +346,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^5.9.1":
+"@prisma/client@npm:5.9.1":
   version: 5.9.1
   resolution: "@prisma/client@npm:5.9.1"
   peerDependencies:
@@ -3063,7 +3063,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "setup-typescript-and-node@workspace:."
   dependencies:
-    "@prisma/client": "npm:^5.9.1"
+    "@prisma/client": "npm:5.9.1"
     "@types/cors": "npm:^2.8.17"
     "@types/express": "npm:^4.17.21"
     "@types/node": "npm:^20.10.2"

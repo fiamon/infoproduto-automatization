@@ -25,12 +25,8 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
-        if (req.body.attempts > 1) {
-            return res.sendStatus(200);
-        }
-
         await axios.post(
-            'http://localhost:8080/notifications/handle',
+            'http://localhost:8080/notification/handle',
             {
                 body: req.body,
             },
@@ -45,6 +41,7 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<void> {
+        console.log(req.body);
         if (req.headers.authorization !== env.SECRET) {
             throw new Error('Invalid request');
         }
