@@ -24,7 +24,7 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
-        await axios.post('http://localhost:8080/notification/handle', {
+        await axios.post('https://infoprodutos.onrender.com/notification/handle', {
             body: req.body,
         });
 

@@ -5,7 +5,7 @@
     "main": "src/server.ts",
     "scripts": {
         "build": "tsc",
-        "start": "node --no-warnings dist/src/server.js",
+        "start": "node dist/src/server.js",
         "start:dev": "tsx watch --no-warnings src/server.ts",
         "coverage": "typescript-coverage-report"
     },
