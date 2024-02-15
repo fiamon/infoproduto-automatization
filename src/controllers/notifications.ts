@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import { NotificationsService } from '../services/notifications';
 import { z } from 'zod';
-import { env } from '../env';
 
 const notificationsService = new NotificationsService();
 
@@ -25,26 +24,14 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
-        await axios.post(
-            'http://localhost:8080/notification/handle',
-            {
-                body: req.body,
-            },
-            {
-                headers: {
-                    Authorization: env.SECRET,
-                },
-            },
-        );
+        await axios.post('http://localhost:8080/notification/handle', {
+            body: req.body,
+        });
 
         return res.sendStatus(200);
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<void> {
-        console.log(req.body);
-        if (req.headers.authorization !== env.SECRET) {
-            throw new Error('Invalid request');
-        }
         await notificationsService.handleRequest(req.body);
         res.sendStatus(200);
     }
