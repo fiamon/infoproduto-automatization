@@ -24,7 +24,7 @@ export class NotificationsService {
                 },
             });
 
-            if (orderRequestDetails.status === 403) {
+            if (orderRequestDetails.status === 403 || orderRequestDetails.status === 401) {
                 await updateMercadoLivreRefreshToken();
                 return this.handleRequest({ body });
             }
@@ -69,7 +69,7 @@ export class NotificationsService {
                 },
             );
 
-            if (message.status === 403) {
+            if (message.status === 403 || message.status === 401) {
                 await updateMercadoLivreRefreshToken();
                 return this.handleRequest({ body });
             }
