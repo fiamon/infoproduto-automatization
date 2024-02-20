@@ -1,6 +1,5 @@
 import { PrismaClient, Tokens } from '@prisma/client';
 import { MercadoLivreNotification, Order } from '../@types';
-import axios from 'axios';
 import { updateMercadoLivreRefreshToken } from './refresh-token';
 
 const prisma = new PrismaClient();
@@ -19,18 +18,18 @@ export class NotificationsService {
 
     private async getOrder(token: Tokens, { body }: MercadoLivreNotification): Promise<Order | void> {
         try {
-            const orderRequest = await fetch(`https://api.mercadolibre.com/${body.resource}`, {
+            const orderRequestDetails = await fetch(`https://api.mercadolibre.com/${body.resource}`, {
                 headers: {
                     Authorization: `Bearer ${token.access_token}`,
                 },
             });
 
-            if (!orderRequest.ok) {
+            if (orderRequestDetails.status === 403) {
                 await updateMercadoLivreRefreshToken();
                 return this.handleRequest({ body });
             }
 
-            const order: Order = await orderRequest.json();
+            const order: Order = await orderRequestDetails.json();
 
             if (!order.pack_id) {
                 order.pack_id = order.id;
@@ -38,10 +37,6 @@ export class NotificationsService {
 
             return order;
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                return console.error('Axios Error: ', error);
-            }
-
             console.log('Error: ', error);
         }
     }
@@ -55,11 +50,11 @@ export class NotificationsService {
             return;
         }
 
-        await this.messageSenderHandler(order, token);
+        await this.messageSenderHandler(order, token, body);
     }
 
-    private async messageSenderHandler(order: Order, token: Tokens) {
-        async function sendMessage() {
+    private async messageSenderHandler(order: Order, token: Tokens, { body }: MercadoLivreNotification) {
+        try {
             const message = await fetch(
                 `https://api.mercadolibre.com/messages/action_guide/packs/${order.pack_id}/option?tag=post_sale`,
                 {
@@ -74,9 +69,14 @@ export class NotificationsService {
                 },
             );
 
-            return message;
-        }
+            if (message.status === 403) {
+                await updateMercadoLivreRefreshToken();
+                return this.handleRequest({ body });
+            }
 
-        sendMessage();
+            return message;
+        } catch (error) {
+            console.log('Error ', error);
+        }
     }
 }
