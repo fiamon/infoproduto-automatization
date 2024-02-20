@@ -24,6 +24,8 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
+        console.log('[sending request no /handle] -> ', req.body);
+
         await axios.post('https://infoprodutos.onrender.com/notification/handle', {
             body: req.body,
         });
@@ -48,6 +50,8 @@ export default class NotificationsController {
         if (!isBodySchema.success) {
             return res.sendStatus(400);
         }
+
+        console.log('[request received] -> ', req.body);
 
         await notificationsService.handleRequest(req.body);
         res.sendStatus(200);
