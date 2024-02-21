@@ -34,23 +34,6 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response | void> {
-        const bodySchema = z.object({
-            _id: z.string(),
-            resource: z.string().startsWith('/orders/'),
-            user_id: z.number(),
-            topic: z.string().startsWith('orders_v2').endsWith('orders_v2'),
-            application_id: z.number(),
-            attempts: z.number(),
-            sent: z.string(),
-            received: z.string(),
-            actions: z.array(z.string()),
-        });
-
-        const isBodySchema = bodySchema.safeParse(req.body);
-        if (!isBodySchema.success) {
-            return res.sendStatus(400);
-        }
-
         console.log('[request received] -> ', req.body);
 
         await notificationsService.handleRequest(req.body);
