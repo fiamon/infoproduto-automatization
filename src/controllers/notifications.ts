@@ -54,7 +54,7 @@ export default class NotificationsController {
             actions: z.array(z.string()).nonempty(),
         });
 
-        const isBodySchema = bodySchema.safeParse(req.body);
+        const isBodySchema = bodySchema.safeParse(req.body.body);
         if (!isBodySchema.success) {
             return res.sendStatus(400);
         }
