@@ -18,6 +18,7 @@ export class NotificationsService {
 
     private async getOrder(token: Tokens, { body }: MercadoLivreNotification): Promise<Order | void> {
         try {
+            console.log('chegou na order');
             const orderRequestDetails = await fetch(`https://api.mercadolibre.com/${body.resource}`, {
                 headers: {
                     Authorization: `Bearer ${token.access_token}`,
@@ -35,6 +36,7 @@ export class NotificationsService {
                 order.pack_id = order.id;
             }
 
+            console.log(order);
             return order;
         } catch (error) {
             console.log('Error: ', error);
@@ -55,6 +57,7 @@ export class NotificationsService {
 
     private async messageSenderHandler(order: Order, token: Tokens) {
         try {
+            console.log('chego na mensagem');
             const message = await fetch(
                 `https://api.mercadolibre.com/messages/action_guide/packs/${order.pack_id}/option?tag=post_sale`,
                 {
@@ -68,6 +71,7 @@ export class NotificationsService {
                     },
                 },
             );
+            console.log(message);
 
             return message;
         } catch (error) {
