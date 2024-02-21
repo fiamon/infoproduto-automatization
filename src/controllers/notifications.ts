@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import { NotificationsService } from '../services/notifications';
 import { z } from 'zod';
+import { env } from '../env';
 
 const notificationsService = new NotificationsService();
 
@@ -24,9 +25,17 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
-        const response = await axios.post('https://infoprodutos.onrender.com/notification/handle', {
-            body: req.body,
-        });
+        const response = await axios.post(
+            'https://infoprodutos.onrender.com/notification/handle',
+            {
+                body: req.body,
+            },
+            {
+                headers: {
+                    Authorization: env.SECRET,
+                },
+            },
+        );
 
         if (response.status >= 400) {
             return res.sendStatus(400);
@@ -48,9 +57,13 @@ export default class NotificationsController {
             actions: z.array(z.string()).nonempty(),
         });
 
-        const isBodySchema = bodySchema.safeParse(req.body.body);
+        const isBodySchema = bodySchema.safeParse(req.body);
         if (!isBodySchema.success) {
             return res.sendStatus(400);
+        }
+
+        if (req.headers.authorization !== env.SECRET) {
+            return res.sendStatus(401);
         }
 
         await notificationsService.handleRequest(req.body);
