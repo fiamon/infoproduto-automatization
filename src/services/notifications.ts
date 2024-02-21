@@ -24,9 +24,9 @@ export class NotificationsService {
                 },
             });
 
-            if (orderRequestDetails.status === 403 || orderRequestDetails.status === 401) {
+            if (orderRequestDetails.status >= 400) {
                 await updateMercadoLivreRefreshToken();
-                return this.handleRequest({ body });
+                return;
             }
 
             const order: Order = await orderRequestDetails.json();
@@ -50,10 +50,10 @@ export class NotificationsService {
             return;
         }
 
-        await this.messageSenderHandler(order, token, body);
+        await this.messageSenderHandler(order, token);
     }
 
-    private async messageSenderHandler(order: Order, token: Tokens, { body }: MercadoLivreNotification) {
+    private async messageSenderHandler(order: Order, token: Tokens) {
         try {
             const message = await fetch(
                 `https://api.mercadolibre.com/messages/action_guide/packs/${order.pack_id}/option?tag=post_sale`,
@@ -68,11 +68,6 @@ export class NotificationsService {
                     },
                 },
             );
-
-            if (message.status === 403 || message.status === 401) {
-                await updateMercadoLivreRefreshToken();
-                return this.handleRequest({ body });
-            }
 
             return message;
         } catch (error) {

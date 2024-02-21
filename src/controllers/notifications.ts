@@ -24,8 +24,6 @@ export default class NotificationsController {
             return res.sendStatus(400);
         }
 
-        console.log('[sending request no /handle] -> ', req.body);
-
         const response = await axios.post('https://infoprodutos.onrender.com/notification/handle', {
             body: req.body,
         });
@@ -38,7 +36,6 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response> {
-        console.log('[request received] -> ', req.body);
         const bodySchema = z.object({
             _id: z.string(),
             resource: z.string().startsWith('/orders/'),
