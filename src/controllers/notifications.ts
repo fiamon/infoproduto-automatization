@@ -41,6 +41,7 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response> {
+        console.log(req.body);
         const bodySchema = z.object({
             _id: z.string(),
             resource: z.string().startsWith('/orders/'),
