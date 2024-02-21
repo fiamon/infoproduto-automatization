@@ -42,7 +42,6 @@ export default class NotificationsController {
     }
 
     async handleTheRequestFromMercadoLivre(req: Request, res: Response): Promise<Response> {
-        console.log('recebido222');
         const bodySchema = z.object({
             _id: z.string(),
             resource: z.string().startsWith('/orders/'),
@@ -59,6 +58,7 @@ export default class NotificationsController {
         if (!isBodySchema.success) {
             return res.sendStatus(400);
         }
+        console.log('feito');
 
         if (req.headers.authorization !== env.SECRET) {
             return res.sendStatus(401);
