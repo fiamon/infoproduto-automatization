@@ -24,7 +24,6 @@ export default class NotificationsController {
         if (!isBodySchema.success) {
             return res.sendStatus(400);
         }
-        console.log('passou pela verificação (recebimento)');
 
         await axios.post(
             'https://infoprodutos.onrender.com/notification/handle',
@@ -58,7 +57,6 @@ export default class NotificationsController {
         if (!isBodySchema.success) {
             return res.sendStatus(400);
         }
-        console.log('feito');
 
         if (req.headers.authorization !== env.SECRET) {
             return res.sendStatus(401);
