@@ -35,8 +35,6 @@ export class NotificationsService {
             if (!order.pack_id) {
                 order.pack_id = order.id;
             }
-
-            console.log(order);
             return order;
         } catch (error) {
             console.log('Error: ', error);
@@ -71,7 +69,7 @@ export class NotificationsService {
                     },
                 },
             );
-            console.log(message);
+            console.log(await message.json());
 
             return message;
         } catch (error) {
